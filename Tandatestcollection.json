@@ -1,0 +1,993 @@
+{
+	"info": {
+		"_postman_id": "fe8e0c52-c2c4-43eb-901f-28af4ada1ccd",
+		"name": "Tanda test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Payout",
+			"item": [
+				{
+					"name": "Valid request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"var body = JSON.parse(responseBody);\r",
+									"pm.test(\"transactionStatusDescription is Processing\", function () {\r",
+									"    pm.expect(body.responseData.transactionStatusDescription).to.eql(\"Processing\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"let response = pm.response.json();\r",
+									"pm.environment.set(\"vigipayReference\", response.responseData.vigipayReference);\r",
+									"\r",
+									"pm.environment.set(\"clientReference\", response.responseData.tandaRequestId);\r",
+									"\r",
+									"console.log(\"hello world\");\r",
+									"\r",
+									"let urlvar = pm.variables.get(\"testurl\");\r",
+									"console.log(\"The value for the variable called testurl is: \"+ urlvar)\r",
+									"\r",
+									"let vigiref = pm.environment.get(\"vigipayReference\");\r",
+									"console.log(vigiref)\r",
+									"\r",
+									"pm.environment.set(\"responseCode\", response.responseData.responseCode);\r",
+									"\r",
+									"let rescode = pm.environment.get(\"responseCode\");\r",
+									"console.log(rescode)\r",
+									"\r",
+									"console.warn(\"I am angry\")\r",
+									"console.info(\"any news\")\r",
+									"console.error(\"mistake\")\r",
+									"\r",
+									"vigipayReference = response.responseData.vigipayReference\r",
+									"console.log(vigipayReference)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"10.00\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid amount \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Amount is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Zero amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid amount \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Amount can only be between 10 and 75000\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"0\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Negative amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid amount \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Amount is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"-50\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid string as amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid amount \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Amount is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"#50\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Large amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Maximum Amount exceeded \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Amount can only be between 10 and 75000\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"5000000000000000\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No customer contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid customer contact \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Customer contact is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"10\",\r\n  \"customerContact\": \"\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid customer contact(non kenyan number)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid customer contact \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Customer contact is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"10\",\r\n  \"customerContact\": \"2348021000000\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid customer contact(random kenyan number)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Invalid customer contact \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Customer contact is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"10\",\r\n  \"customerContact\": \"25420650284\",\r\n  \"vigipayTransactionReference\": \"{{$guid}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No vigipay ref",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Vigipay ref missing \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Vigipay Transaction Reference cannot be empt\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": \"10\",\r\n  \"customerContact\": \"254712000000\",\r\n  \"vigipayTransactionReference\": \"\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{testurl}}api/Payment/Payout",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Payout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"item": [
+				{
+					"name": "Valid vigipay ref",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/Status/{{vigipayReference}}",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Status",
+								"{{vigipayReference}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "no vigipay ref",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/Status",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid vigipay ref",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/Status/)*^23!Q%^",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Status",
+								")*^23!Q%^"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "using client ref instead of vigipay ref",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/Status/{{clientReference}}",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"Status",
+								"{{clientReference}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "valid client ref (tanda request id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/StatusByClientRef/{{clientReference}}",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"StatusByClientRef",
+								"{{clientReference}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "no client ref (tanda request id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/StatusByClientRef/",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"StatusByClientRef",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "using vigipay ref instead of client ref (tanda request id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/StatusByClientRef/Tandaref02",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"StatusByClientRef",
+								"Tandaref02"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid client ref (tanda request id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Payment/StatusByClientRef/6@&*2",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Payment",
+								"StatusByClientRef",
+								"6@&*2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallet Balance",
+			"item": [
+				{
+					"name": "valid request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Wallet/Balance",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Wallet",
+								"Balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction List",
+			"item": [
+				{
+					"name": "Transactions by page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Transactions/page/20/1",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Transactions",
+								"page",
+								"20",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions by page(no details)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Transactions/page/",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Transactions",
+								"page",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions by date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Transactions/bydate/20/1?startDate=2021-08-17&endDate=2021-08-17",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Transactions",
+								"bydate",
+								"20",
+								"1"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2021-08-17"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-08-17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions by date (incorrect date range)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"wrong date range\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Start Date or End Date is invalid\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Transactions/bydate/20/1?startDate=2021-08-12&endDate=2021-08-10",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Transactions",
+								"bydate",
+								"20",
+								"1"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2021-08-12"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-08-10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transactions by date (no date)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Date error\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Start date is required\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{testurl}}api/Transactions/bydate/20/1?startDate=&endDate=",
+							"host": [
+								"{{testurl}}api"
+							],
+							"path": [
+								"Transactions",
+								"bydate",
+								"20",
+								"1"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": ""
+								},
+								{
+									"key": "endDate",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
